@@ -1,0 +1,44 @@
+---
+import RecordRenderer from "#modules/Record/RecordRenderer.svelte";
+import ProfileLayout from "#layouts/ProfileLayout.astro";
+import { prisma } from "#lib/prisma";
+import { getUserFromAstroGlobal } from "#lib/auth";
+
+const user = await getUserFromAstroGlobal(Astro)
+
+const { uid } = Astro.params;
+
+const record = await prisma.userRecord.findUnique({
+	where: {
+		uid
+	},
+	include: {
+		user: true,
+		organization: true
+	}
+});
+
+if (!record) {
+	return Astro.redirect('/profile/dashboard');
+}
+
+const similar = await prisma.userRecord.findMany({
+	where: {
+		category: record.category
+	},
+	take: 5,
+	include: {
+		user: true,
+		organization: true
+	},
+	orderBy: {
+		created: 'desc'
+	}
+})
+
+
+---
+
+<ProfileLayout title={`Record ${uid}`}>
+	<RecordRenderer {record} {similar} client:load></RecordRenderer>
+</ProfileLayout>

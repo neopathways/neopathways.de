@@ -1,0 +1,32 @@
+---
+import ProfileLayout from "#layouts/ProfileLayout.astro";
+import { prisma } from "#lib/prisma";
+import RefreshTokenTable from "#components/Sessions/RefreshTokenTable.svelte";
+import { getUserFromAstroGlobal } from "#lib/auth";
+
+const user = await getUserFromAstroGlobal(Astro);
+
+if (!user) {
+	return Astro.redirect("/auth/login")
+}
+
+const refreshTokens = await prisma.refreshToken.findMany({
+	where: {
+		user: {
+			uid: user.uid
+		}
+	},
+	orderBy: {
+		created: "desc"
+	}
+})
+
+
+---
+
+<ProfileLayout title="Sessions | Neopathways">
+	<h1>Sessions</h1>
+	<div class="not-prose border border-base-300 rounded-lg">
+		<RefreshTokenTable refreshTokens={refreshTokens} clientAddress={Astro.clientAddress} client:load></RefreshTokenTable>
+	</div>
+</ProfileLayout>

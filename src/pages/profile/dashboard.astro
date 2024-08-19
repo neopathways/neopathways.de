@@ -1,0 +1,48 @@
+---
+import BarChart from "#components/BarChart.svelte";
+import ProfileLayout from "#layouts/ProfileLayout.astro";
+import { ArrowTopRight, DotsVertical, Download, Trash } from "radix-svelte-icons";
+import { getUserFromAstroGlobal } from "#lib/auth";
+import UserRecordTable from "#components/Tables/UserRecordTable.svelte";
+
+const user = await getUserFromAstroGlobal(Astro);
+
+if (!user) {
+	return Astro.redirect("/auth/login")
+}
+
+
+---
+
+<ProfileLayout title="Dashboard | Neopathways">
+	<h1>Welcome back, {user?.firstname}!</h1>
+	<div class="grid grid-cols-[2fr,1fr] gap-8 mb-8">
+		<div class="card lg:card-side bg-base-200 border border-base-300">
+			<div class="card-body">
+				<div class="flex justify-between gap-4">
+				<h2 class="card-title my-0">Overall Record Accuracy</h2>
+				<div class="dropdown">
+					<button tabindex="0" role="button" class="btn btn-square btn-ghost"><DotsVertical size={18}></DotsVertical></button>
+						<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 border border-base-300">
+							<li><a><Trash size={18}></Trash> Delete</a></li>
+							<li><a><Download size={18}></Download> Download</a></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<div class="flex flex-row items-end gap-4">
+						<span class="text-3xl text-white font-semibold">82.0%</span>
+						<span class="text-gray-600 font-semibold flex flex-row items-center gap-2"><div class="rounded-full p-0.5 text-success fill-success bg-success bg-opacity-40"><ArrowTopRight size={14}></ArrowTopRight></div> +1.5%</span>
+					</div>
+					<span class="text-gray-600 font-semibold flex flex-row items-center gap-2">Change from yesterday</span>
+				</div>
+				<div class="w-full h-auto flex flex-row gap-4 items-end">
+					<span class="text-gray-500 font-semibold whitespace-nowrap">412 today</span>
+					<BarChart client:only></BarChart>
+				</div>
+			</div>
+		</div>
+	</div>
+	<h2>Personal Records</h2>
+	<UserRecordTable client:only></UserRecordTable>
+</ProfileLayout>

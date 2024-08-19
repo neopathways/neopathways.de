@@ -1,0 +1,64 @@
+---
+import DocsNavigation from "#components/Documentation/DocsNavigation.svelte";
+import HeadingMap from "#components/Documentation/HeadingMap.svelte";
+import DocsLayout from "#layouts/DocsLayout.astro";
+import { getCollection } from "astro:content";
+import { getEntryBySlug } from "astro:content";
+import moment from "moment";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+	return Astro.redirect("/docs")
+}
+
+const entry = await getEntryBySlug("docs", slug);
+
+if (!entry) {
+	return Astro.redirect("/docs")
+}
+
+const { body, data, render } = entry;
+
+const {Content, headings} = await render();
+
+// Split the slug and transform every part so there are no underscores and stuff
+const paths = entry.slug.split("/").map((path) => {
+	return {
+		href: `/docs/${path}`,
+		name: path.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+	}
+});
+
+const collection = await getCollection("docs")
+const pathname = Astro.url.pathname
+---
+
+<DocsLayout title={`${data.title} | Docs Neopathways`} paths={paths}>
+	<main class="mt-[125px] py-16 max-w-screen-2xl mx-auto min-h-[calc(100vh-215px)] grid grid-cols-[300px,1fr,300px] gap-8">
+		<div class="sticky top-[150px] flex flex-col h-min">
+			<HeadingMap {headings} client:load></HeadingMap>
+		</div>
+		<article class="prose prose-xl">
+			<h1 class="mb-2">{data.title}</h1>
+			<span class="text-gray-400 text-base">Updated on {moment(data.date).format("MMMM DD, YYYY")} by <strong>{data.author}</strong></span>
+			<div class="flex flex-row gap-4 mt-2">
+				{data.tags.map(tag => <a class="badge bg-neutral text-neutral-content link link-hover no-underline font-normal">{tag}</a>)}
+			</div>
+			<div class="divider"></div>
+			<div class="flex flex-col gap-0">
+				<span class="uppercase text-base font-bold text-base-content">Description</span>
+				<p class="mt-2 mb-8 text-lg">{data.description}</p>
+				<span class="uppercase text-base font-bold text-base-content">Languages</span>
+				<div class="flex flex-row gap-4 my-4">
+					{data.languages?.map(language => <a class="badge px-4 py-3.5 bg-gradient-to-tr from-primary to-secondary text-primary-content capitalize font-normal link no-underline">{language}</a>)}
+				</div>
+			</div>
+			<div class="divider"></div>
+			<Content></Content>
+		</article>
+		<div class="flex flex-col h-min">
+			<DocsNavigation {collection} {pathname} client:load></DocsNavigation>
+		</div>
+	</main>
+</DocsLayout>

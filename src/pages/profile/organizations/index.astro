@@ -1,0 +1,45 @@
+---
+import ProfileLayout from "#layouts/ProfileLayout.astro";
+import { prisma } from "#lib/prisma";
+import { getUserFromAstroGlobal } from "#lib/auth";
+import OrganizationsTable from "#components/Organizations/OrganizationsTable.svelte";
+import { Plus } from "radix-svelte-icons";
+import CreateOrganizationButton from "#components/Organizations/CreateOrganizationButton.svelte";
+
+const user = await getUserFromAstroGlobal(Astro);
+
+if (!user) {
+	return Astro.redirect("/auth/login")
+}
+
+const organizations = await prisma.organization.findMany({
+	where: {
+		owner: {
+			uid: user.uid
+		}
+	},
+	include: {
+		_count: {
+			select: {
+				oAuthConnections: true,
+				oAuthRefreshTokens: true,
+				ProvidedRecords: true,
+				members: true,
+				Uploads: true
+			}
+		}
+	}
+})
+
+
+---
+
+<ProfileLayout title="Organizations | Neopathways">
+	<h1>Organizations</h1>
+	<div class="not-prose border border-base-300 rounded-lg">
+		<OrganizationsTable organizations={organizations} client:load></OrganizationsTable>
+	</div>
+	<div class="my-4 flex items-center justify-center">
+		<CreateOrganizationButton client:load></CreateOrganizationButton>
+	</div>
+</ProfileLayout>

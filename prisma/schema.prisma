@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider = "bunx zod-prisma-types"
+	output="./generated"
+	addSelectType=false
+	addIncludeType=false
+	addInputTypeValidation=false
+	createInputTypes=false
+	createPartialTypes=false
+	createRelationValuesTypes=false
+	createOptionalDefaultValuesTypes=false
+}
+
+model User {
+  uid           String         @id @default(cuid())
+  email         String         @unique
+  firstname     String
+  lastname      String
+  password      String
+  created       DateTime       @default(now())
+  updated       DateTime       @updatedAt
+
+  RefreshTokens RefreshToken[]
+	oAuthRefreshTokens oAuthRefreshToken[]
+  Organizations Organization[] 
+	OrganizationMemberOf OrganizationMember[]
+  Records       UserRecord[]
+	Uploads       Upload[]
+	oAuthConnections oAuthConnection[]
+	OverallCollectedAccuracies OverallCollectedAccuracy[]
+}
+
+enum OrganizationRole {
+	ADMIN
+	MEMBER
+	MODERATOR
+	OWNER
+}
+
+model OrganizationMember {
+	uid String @id @default(cuid())
+	useruid String
+	user User @relation(fields: [useruid], references: [uid])
+	orguid String
+	organization Organization @relation(fields: [orguid], references: [uid])
+	created DateTime @default(now())
+	role OrganizationRole
+}
+
+model RefreshToken {
+  uid        String       @id @default(cuid())
+  token      String       @unique
+  useruid    String
+  user       User         @relation(fields: [useruid], references: [uid])
+  created    DateTime     @default(now())
+  validUntil DateTime
+	ip String?
+	agent String?
+}
+
+model Organization {
+  uid             String         @id @default(cuid())
+  name            String @unique
+	ownerId String
+	owner User @relation(fields: [ownerId], references: [uid])
+  created         DateTime       @default(now())
+  updated         DateTime       @updatedAt
+	description String?
+	redirecturl String
+	
+	members OrganizationMember[]
+  ProvidedRecords UserRecord[]
+	Uploads				 Upload[]
+	oAuthConnections oAuthConnection[]
+	oAuthRefreshTokens oAuthRefreshToken[]
+	OverallCollectedAccuracies OverallCollectedAccuracy[]
+}
+
+enum RecordCategory {
+  IDENTIFICATION
+  BIOGRAPHICAL
+  DEMOGRAPHIC
+  MEDICAL
+  FINANCIAL
+  ONLINE_ACTIVITY
+  BEHAVIORAL
+  PREFERENCES
+  LOCATION
+  BIOMETRIC
+  LEGAL
+  PSYCHOLOGICAL
+  INTERESTS
+  COMMUNICATION
+  INTERACTION
+  OTHER
+}
+
+enum RecordTag {
+  SCAN
+  IMAGE
+  FACE
+  FINGERPRINT
+  VOICEPRINT
+  IRIS
+  TEXT
+  VOICE
+  VIDEO
+  LOCATION
+  CONTACT
+  EMAIL
+  MESSAGE
+  CHAT
+  VOICECALL
+  VIDEOCALL
+  VIDEOCONFERENCE
+  DOCUMENT
+  FORM
+  QUESTIONNAIRE
+  APPLICATION
+  TRANSACTION
+  CONTRACT
+  AGREEMENT
+  PERMISSION
+  CONSENT
+  APPROVAL
+  CONFIRMATION
+  VERIFICATION
+  VALIDATION
+  OTHER
+}
+
+model UserRecord {
+  uid          String         @id @default(cuid())
+  created      DateTime       @default(now())
+  updated      DateTime       @updatedAt
+  outdated     Boolean        @default(false)
+	category     RecordCategory
+  tags         RecordTag[]
+  data         Json
+	// Calculated trust score based on previous matches on this organization
+	accuracy     Float
+
+  useruid      String
+  user         User           @relation(fields: [useruid], references: [uid])
+
+  orguid       String
+  organization Organization   @relation(fields: [orguid], references: [uid])
+}
+
+// Stores the overall accuracy of records collected for a specific user at a certain point in time
+// That way we can track the overall accuracy trend over time
+model OverallCollectedAccuracy {
+	uid String @id @default(cuid())
+	useruid String
+	user User @relation(fields: [useruid], references: [uid])
+	orguid String
+	organization Organization @relation(fields: [orguid], references: [uid])
+	accuracy Float
+	created DateTime @default(now())
+}
+
+model Upload {
+	uid        String      @id @default(cuid())
+	filename  String
+	description String
+	mimetype  String
+	encoding  String
+	useruid   String
+	user      User     @relation(fields: [useruid], references: [uid])
+	orguid    String
+	organization Organization @relation(fields: [orguid], references: [uid])
+	created   DateTime @default(now())
+}
+
+model oAuthRefreshToken {
+	uid        String       @id @default(cuid())
+	token      String       @unique
+	useruid    String
+	user       User         @relation(fields: [useruid], references: [uid])
+	orguid		 String
+	organization Organization @relation(fields: [orguid], references: [uid])
+	created    DateTime     @default(now())
+	validUntil DateTime
+}
+
+enum Scope {
+	READ
+	WRITE
+	DELETE
+	FULL
+	LOCATION_READ
+	LOCATION_WRITE
+	LOCATION_DELETE
+	LOCATION_FULL
+}
+
+model oAuthConnection {
+	uid        String       @id @default(cuid())
+	useruid    String
+	user       User         @relation(fields: [useruid], references: [uid])
+	orguid		 String
+	organization Organization @relation(fields: [orguid], references: [uid])
+	created    DateTime     @default(now())
+	updated    DateTime     @updatedAt
+	// TODO: Change to Scope[]
+	scopes		 String[]
+
+	@@unique([useruid, orguid])
+}
+
+// A model for geocoding IP addresses
+// This is useful for tracking the location of users
+model IPGeocode {
+	uid String @id @default(cuid())
+	ip String @unique
+	continent_code String
+	continent_name String
+	country_code String
+	country_name String
+	subdivision_code String
+	subdivision_name String
+	city_name String
+	latitude Float
+	longitude Float
+	postal_code String
+	timezone String
+	accuracy_radius Int
+}

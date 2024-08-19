@@ -1,0 +1,122 @@
+---
+import BlurredImageWrapper from '#components/BlurredImageWrapper.svelte';
+import ReactiveImage from '#components/ReactiveImage.svelte';
+import Layout from '#layouts/Layout.astro';
+---
+
+<Layout title="Neopathways">
+	<div class="flex flex-col gap-24">
+		<div class="max-w-screen-2xl w-full mx-auto mt-[75px] prose prose-2xl grid grid-cols-2">
+			<div class="w-full h-full flex items-center justify-center relative">
+				<div class="max-w-xl">
+					<h1 class="text-white text-6xl font-medium mb-8">Everything starts with identity</h1>
+					<p class="text-white text-2xl mb-32">Identity can create great user experiences, increase customer sign-ups, improve employee productivity, and get apps to market faster.</p>
+					<div class="flex flex-row gap-4 items-center">
+						<a href="/neopathways" class="btn bg-base-100 text-base-content btn-lg px-12">Free trial</a>
+						<a href="/neopathways" class="btn btn-outline btn-lg px-12 text-white">Sign Up</a>
+					</div>
+				</div>
+				<ReactiveImage src="/landing-background.svg" srclight='/landing-background-light.svg' class="absolute top-0 left-0 w-full h-full -z-10 my-0 object-cover" client:load></ReactiveImage>
+			</div>
+			<div>
+				<BlurredImageWrapper class="object-cover" src="https://media.istockphoto.com/id/1355030282/photo/shot-of-a-mature-businessman-using-a-laptop-in-a-modern-office.jpg?s=612x612&w=0&k=20&c=OItGhzI7XeKceicohbtU0q2ss0aFoMhF3kZfTYPXFLE=" alt=''></BlurredImageWrapper>
+			</div>
+		</div>
+		<div class="max-w-screen-xl w-full mx-auto">
+			<div class="flex flex-col gap-8">
+				<blockquote class="text-5xl">Get to know the people you're working with</blockquote>
+				<blockquote class="text-5xl text-gray-500">Our systems enable organizations to perform best with little overhead.</blockquote>
+			</div>
+		</div>
+		<div class="max-w-screen-2xl w-full mx-auto bg-primary bg-opacity-25 rounded-lg">
+			<div class="max-w-screen-xl mx-auto grid grid-cols-2 gap-8 py-24">
+				<div class="flex flex-col gap-4 mx-auto">
+					<p class="text-3xl leading-snug text-base-content text-opacity-70">Our platform is extensible, easy-to-use, neutral, and works with your existing solutions, so you're free to choose the best technology for now and the future.</p>
+					<p class="text-3xl leading-snug text-base-content">This is how we do it</p>
+				</div>
+				<div class="grid grid-cols-2 gap-12">
+						<div class="flex flex-col">
+							<div class="text-base-content text-4xl font-bold">20,400+</div>
+							<div class="text-lg text-base-content text-opacity-65">customers</div>
+						</div>
+						<div class="flex flex-col">
+							<div class="text-base-content text-4xl font-bold">7000+</div>
+							<div class="text-lg text-base-content text-opacity-65">integrations</div>
+						</div>
+						<div class="flex flex-col">
+							<div class="text-base-content text-4xl font-bold">93%</div>
+							<div class="text-lg text-base-content text-opacity-65">Willingness to Recommend in the 2023 Gartner® Peer Insights™ 'Customers' Choice in Access Management' report</div>
+						</div>
+				</div>
+				<div class="divider col-span-2"></div>
+				<div class="card bg-base-100 hover:-translate-y-4 transition-[400ms,all,ease] group cursor-pointer">
+					<figure>
+						<BlurredImageWrapper class="object-cover h-96 w-full" alt="" src='https://png.pngtree.com/thumb_back/fw800/background/20221130/pngtree-korean-girl-studying-and-working-from-home-with-laptop-photo-image_42600132.jpg'></BlurredImageWrapper>
+					</figure>
+					<div class="card-body p-16">
+						<h2 class="card-title text-4xl mb-4">Customer Identity Cloud</h2>
+						<p class="text-xl text-base-content text-opacity-70">Built to tackle both Consumer and SaaS Apps across every industry. Authenticate, authorize, and secure access for applications, devices, and users.</p>
+						<div class="card-actions">
+							<a href="" class="text-xl text-base-content link mt-12 group-hover:text-primary transition-[400ms,color,ease]">Explore Customer Identity Cloud</a>
+						</div>
+					</div>
+				</div>
+				<div class="card bg-base-100 hover:-translate-y-4 transition-[400ms,all,ease] group cursor-pointer">
+					<figure>
+						<BlurredImageWrapper class="object-cover h-96 w-full" alt="" src='https://media.istockphoto.com/id/1347652268/photo/group-of-colleagues-celebrating-success.jpg?s=612x612&w=0&k=20&c=dojtkf9ItX21j3jtlGOGpbKDs320TTAuofoGnNSZD8Y='></BlurredImageWrapper>
+					</figure>
+					<div class="card-body p-16">
+						<h2 class="card-title text-4xl mb-4">Workforce Identity Cloud</h2>
+						<p class="text-xl text-base-content text-opacity-70">Secure your employees, contractors, and partners — wherever they are. Covers every part of the Identity lifecycle, from governance, to access, to privileged controls.</p>
+						<div class="card-actions">
+							<a href="" class="text-xl text-base-content link mt-12 group-hover:text-primary transition-[400ms,color,ease]">Explore Customer Identity Cloud</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="max-w-screen-xl w-full mx-auto prose prose-lg flex flex-col">
+			<h2 class="text-5xl font-normal leading-tight">We're here for you, from always-on customer support to thousands of integrations designed for every use case</h2>
+			<div class="grid grid-cols-3 gap-8">
+				<a class="card bg-base-200 border border-base-300 hover:-translate-y-4 transition-all hover:bg-primary hover:bg-opacity-60 cursor-pointer no-underline" href="/identity-verification">
+					<div class="card-body">
+						<h3 class="card-title mt-1">Identity Verification</h3>
+						<p>Verify the identity of your users with our identity verification services.</p>
+						<div class="card-actions mt-16">
+							<span class="link">Learn More</span>
+						</div>
+					</div>
+				</a>
+				<a class="card bg-base-200 border border-base-300 hover:-translate-y-4 transition-all hover:bg-primary hover:bg-opacity-60 cursor-pointer no-underline" href="/background-checks">
+					<div class="card-body">
+						<h3 class="card-title mt-1">Background Checks</h3>
+						<p>Perform background checks on your employees and customers.</p>
+						<div class="card-actions mt-16">
+							<span class="link">Learn More</span>
+						</div>
+					</div>
+				</a>
+				<a class="card bg-base-200 border border-base-300 hover:-translate-y-4 transition-all hover:bg-primary hover:bg-opacity-60 cursor-pointer no-underline" href="/document-verification">
+					<div class="card-body">
+						<h3 class="card-title mt-1">Document Verification</h3>
+						<p>Verify the authenticity of documents with our document verification services.</p>
+						<div class="card-actions mt-16">
+							<span class="link">Learn More</span>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="divider max-w-screen-xl mx-auto w-full"></div>
+		<div class="max-w-screen-xl mx-auto grid grid-cols-2 gap-12 prose prose-2xl mb-24">
+			<h3 class="text-4xl my-0 font-normal">Ready to put Identity first?</h3>
+			<div class="flex flex-col">
+				<p class="mt-0">Get hands on with the free trial today, or get in touch with our team to discuss your unique needs.</p>
+				<div class="flex flex-row gap-4">
+					<a href="" class="btn btn-primary btn-lg">Get Started</a>
+					<a href="" class="btn btn-outline btn-lg">Learn More</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</Layout>

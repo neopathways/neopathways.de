@@ -1,0 +1,33 @@
+---
+import Footer from '#components/Footer.svelte';
+import Header from '#components/Header.svelte';
+import { getUserFromAstroGlobal } from '#lib/auth';
+
+const user = await getUserFromAstroGlobal(Astro, {}, false);
+
+interface Props {
+	title: string;
+}
+
+const light = Astro.cookies.get("light")?.value === "true";
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+	</head>
+	<body>
+		<Header client:load {user} light={light}></Header>
+		<main class="max-w-screen-2xl w-full mt-[75px] prose prose-lg mx-auto p-16">
+			<slot />
+		</main>
+		<Footer client:load></Footer>
+	</body>
+</html>

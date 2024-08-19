@@ -1,0 +1,168 @@
+---
+import LineChart from "#components/LineChart.svelte";
+import BarChart from "#components/BarChart.svelte";
+import ProfileLayout from "#layouts/ProfileLayout.astro";
+import { prisma } from "#lib/prisma";
+import moment from 'moment';
+import { ArrowTopRight, CheckCircled, DotsVertical, Download, FileText, Trash } from "radix-svelte-icons";
+import { getUserFromAstroGlobal } from "#lib/auth";
+
+const user = await getUserFromAstroGlobal(Astro, {
+	OrganizationMemberOf: {
+			include: {
+				organization: true
+			}
+		},
+		Organizations: {
+			include: {
+				_count: {
+					select: {
+						members: true,
+						ProvidedRecords: true
+					}
+				}
+			}
+		}
+});
+
+if (!user) {
+	return Astro.redirect("/auth/login")
+}
+
+const { uid: organizationUid } = Astro.params;
+
+const organization = await prisma.organization.findUnique({
+	where: {
+		uid: organizationUid
+	},
+	include: {
+		_count: {
+			select: {
+				members: true,
+				ProvidedRecords: true
+			}
+		},
+		ProvidedRecords: {
+			take: 50,
+			include: {
+				user: {
+					select: {
+						uid: true,
+						firstname: true,
+						lastname: true
+					}
+				}
+			}
+		}
+	}
+});
+
+
+---
+
+<ProfileLayout title="Dashboard | Neopathways">
+	<div class="flex flex-row justify-between items-center mb-8">
+		<h1 class="mb-0">Organization Status</h1>
+		<div class="flex flex-row gap-4">
+			<input type="text" placeholder="Search..." class="input input-bordered border-base-300 bg-base-200">
+			<select class="select select-bordered border-base-300 bg-base-200">
+				<option disabled selected>Category</option>
+			</select>
+		</div>
+	</div>
+	<div class="grid grid-cols-[2fr,1fr] gap-8 mb-8">
+		{user?.Organizations.map(org => {
+			return (
+			<div class="card lg:card-side bg-base-200 border border-base-300">
+				<div class="card-body">
+					<div class="flex justify-between gap-4">
+					<h2 class="card-title my-0">{org.name} <span class="text-success text-sm flex flex-row gap-2 items-center"><CheckCircled></CheckCircled> 100% Uptime</span></h2>
+					<div class="dropdown">
+						<button tabindex="0" role="button" class="btn btn-square btn-ghost"><DotsVertical size={18}></DotsVertical></button>
+							<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 border border-base-300">
+								<li><a><Trash size={18}></Trash> Delete</a></li>
+								<li><a><Download size={18}></Download> Download</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="w-full h-52">
+						<LineChart client:only></LineChart>
+					</div>
+				</div>
+			</div>
+			)
+		})}
+		<div class="card lg:card-side bg-base-200 border border-base-300">
+			<div class="card-body">
+				<div class="flex justify-between gap-4">
+				<h2 class="card-title my-0">Overall recognition success</h2>
+				<div class="dropdown">
+					<button tabindex="0" role="button" class="btn btn-square btn-ghost"><DotsVertical size={18}></DotsVertical></button>
+						<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 border border-base-300">
+							<li><a><Trash size={18}></Trash> Delete</a></li>
+							<li><a><Download size={18}></Download> Download</a></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<div class="flex flex-row items-end gap-4">
+						<span class="text-3xl text-white font-semibold">82.0%</span>
+						<span class="text-gray-600 font-semibold flex flex-row items-center gap-2"><div class="rounded-full p-0.5 text-success fill-success bg-success bg-opacity-40"><ArrowTopRight size={14}></ArrowTopRight></div> +1.5%</span>
+					</div>
+					<span class="text-gray-600 font-semibold flex flex-row items-center gap-2">Change from yesterday</span>
+				</div>
+				<div class="w-full h-auto flex flex-row gap-4 items-end">
+					<span class="text-gray-500 font-semibold whitespace-nowrap">412 today</span>
+					<BarChart client:only></BarChart>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="overflow-x-auto not-prose border border-base-300 rounded-lg">
+		<table class="table bg-base-200">
+			<!-- head -->
+			<thead class="bg-base-100">
+				<tr class="border-b border-b-base-300">
+					<th class="rounded-tl-lg">Record Type</th>
+					<th>ID</th>
+					<th>Tags</th>
+					<th>User</th>
+					<th class="rounded-tr-lg">Created</th>
+				</tr>
+			</thead>
+			<tbody>
+				{organization?.ProvidedRecords.map(record => {
+					return (<tr>
+					<td>
+						<div class="flex items-center gap-2">
+							<FileText size={20}></FileText>
+							<span>{record.category}</span>
+						</div>
+					</td>
+					<td>
+						<a href={`/profile/record/${record.uid}`} class="link">{record.uid}</a>
+					</td>
+					<td>
+						<div class="flex flex-wrap gap-2">
+							{record.tags.map(tag => {
+								return (<span class="badge badge-primary">{tag}</span>)
+							})}
+						</div>
+					</td>
+					<td>
+						<div class="flex items-center gap-2">
+							<img src="https://i.pravatar.cc/40" class="rounded-full w-8 h-8" alt="avatar" />
+							<span class="link">{record.user.firstname} {record.user.lastname}</span>
+						</div>
+					</td>
+					<td>
+						<p class="font-bold">{moment(record.created).format('MMMM Do YYYY')}</p>
+						<p class="text-gray-500 ">{moment(record.created).format('h:mmA')}</p>
+					</td>
+				</tr>)
+				})}
+			</tbody>
+			<!-- foot -->
+		</table>
+	</div>
+</ProfileLayout>

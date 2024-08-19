@@ -1,0 +1,146 @@
+---
+title: Client Integration
+description: Example of a simple page
+category: Client
+date: 2024-08-17
+tags: [Client]
+languages: [javascript]
+author: Moritz Utcke
+---
+
+import MockResponse from '../../components/Documentation/MockResponse.svelte';
+
+### OAuth Provider and Client Integration Flow
+
+#### Overview
+This document describes how to integrate with an OAuth 2.0 provider using TypeScript. The OAuth flow allows clients to securely access resources on behalf of a user without sharing their credentials.
+
+#### OAuth Provider Setup
+
+1. **Authorization Endpoint**  
+   The authorization endpoint is where the client application directs the user to authenticate and authorize access.
+
+```typescript
+const authorizationEndpoint = 'https://provider.com/oauth/authorize';
+```
+
+2. **Token Endpoint**  
+   The token endpoint exchanges the authorization code for an access token.
+
+```typescript
+const tokenEndpoint = 'https://provider.com/oauth/token';
+```
+
+3. **Client Registration**  
+   Register your application with the OAuth provider to obtain the `client_id` and `client_secret`.
+
+```typescript
+const clientId = 'your-client-id';
+const clientSecret = 'your-client-secret';
+const redirectUri = 'https://yourapp.com/callback';
+```
+
+#### Client Integration Flow
+
+1. **Initiate Authorization Request**
+   Redirect the user to the OAuth provider's authorization endpoint.
+
+```typescript
+const state = generateRandomState(); // Optional: helps prevent CSRF attacks.
+const authorizationUrl = `${authorizationEndpoint}?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+
+window.location.href = authorizationUrl;
+```
+
+2. **Handle Redirect and Retrieve Authorization Code**
+   After the user authorizes the request, the OAuth provider redirects back to your application with an authorization code.
+
+```typescript
+const urlParams = new URLSearchParams(window.location.search);
+const authorizationCode = urlParams.get('code');
+const receivedState = urlParams.get('state');
+
+if (receivedState !== state) {
+	throw new Error('State mismatch error!');
+}
+```
+
+3. **Exchange Authorization Code for Access Token**
+   Send a POST request to the token endpoint to exchange the authorization code for an access token.
+
+```typescript
+const response = await fetch(tokenEndpoint, {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/x-www-form-urlencoded',
+	},
+	body: new URLSearchParams({
+		grant_type: 'authorization_code',
+		code: authorizationCode!,
+		redirect_uri: redirectUri,
+		client_id: clientId,
+		client_secret: clientSecret,
+	}),
+});
+
+const tokenData = await response.json();
+const accessToken = tokenData.access_token;
+```
+
+4. **Access Protected Resources**
+   Use the access token to make authorized requests to protected resources on behalf of the user.
+
+```typescript
+const resourceUrl = 'https://provider.com/api/resource';
+
+const resourceResponse = await fetch(resourceUrl, {
+	headers: {
+		Authorization: `Bearer ${accessToken}`,
+	},
+});
+
+const resourceData = await resourceResponse.json();
+console.log('Protected Resource Data:', resourceData);
+```
+
+5. **Refresh Token (Optional)**
+   If the access token expires, use the refresh token to obtain a new access token without requiring the user to re-authenticate.
+	 
+<MockResponse>
+	```typescript
+const refreshToken = tokenData.refresh_token;
+
+const refreshResponse = await fetch(tokenEndpoint, {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/x-www-form-urlencoded',
+	},
+	body: new URLSearchParams({
+		grant_type: 'refresh_token',
+		refresh_token: refreshToken!,
+		client_id: clientId,
+		client_secret: clientSecret,
+	}),
+});
+
+const newTokenData = await refreshResponse.json();
+const newAccessToken = newTokenData.access_token;
+```
+
+<div slot="response">
+	```json
+{
+	"access_token": "new-access"
+}
+	```
+</div>
+
+</MockResponse>
+
+#### Conclusion
+
+By following the steps outlined in this guide, you can securely integrate your TypeScript application with an OAuth 2.0 provider, allowing for secure access to protected resources on behalf of your users.
+
+---
+
+This concise approach covers the basic steps needed for an OAuth client integration using TypeScript. Let me know if you need any further details!

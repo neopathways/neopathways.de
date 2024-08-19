@@ -1,0 +1,25 @@
+---
+import AuthLayout from "#layouts/AuthLayout.astro";
+import { getUserFromAstroGlobal } from "#lib/auth";
+import LoginModule from "#modules/LoginModule.svelte";
+
+const user = await getUserFromAstroGlobal(Astro);
+
+const redirect = Astro.url.searchParams.get("redirecturl");
+
+if (!user) {
+	Astro.cookies.delete("accessToken")
+	Astro.cookies.delete("refreshToken")
+} else {
+	if (redirect) {
+		return Astro.redirect(redirect)
+	}
+	return Astro.redirect("/profile/dashboard")
+}
+
+
+---
+
+<AuthLayout title="Login | Neopathways">
+	<LoginModule client:load></LoginModule>
+</AuthLayout>

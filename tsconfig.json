@@ -1,0 +1,16 @@
+{
+  "extends": "astro/tsconfigs/strict",
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"#components/*": ["./src/components/*"],
+			"#layouts/*": ["./src/layouts/*"],
+			"#styles/*": ["./src/styles/*"],
+			"#lib/*": ["./src/lib/*"],
+			"#types/*": ["./src/types/*"],
+			"#modules/*": ["./src/modules/*"],
+			"prisma/generated": ["./prisma/generated"],
+		},
+		"types": ["astro", "bun-types"]
+	}
+}

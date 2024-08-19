@@ -1,0 +1,89 @@
+---
+import AuthLayout from "#layouts/AuthLayout.astro";
+import { prisma } from "#lib/prisma";
+import { Scope } from "#types/oauth";
+import OAuthConnectModule from "#modules/OAuthConnectModule.svelte";
+import { getUserFromAstroGlobal } from "#lib/auth";
+
+// Make sure the user is already logged in
+const user = await getUserFromAstroGlobal(Astro);
+
+if (!user) {
+	return Astro.redirect(`/auth/login?redirecturl=${encodeURIComponent(Astro.url.href)}`)
+}
+
+// Expect a couple of query parameters
+const organizationuid = Astro.url.searchParams.get("organizationuid");
+const scope = Astro.url.searchParams.get("scope");
+const redirectUri = Astro.url.searchParams.get("redirect_uri");
+
+if (!organizationuid || !scope) {
+	return Astro.redirect("/oauth/insecure")
+}
+
+// Make sure the organization exists
+const organization = await prisma.organization.findUnique({
+	where: {
+		uid: organizationuid
+	}
+});
+
+if (!organization) {
+	return Astro.redirect("/oauth/insecure")
+}
+
+if (organization.redirecturl !== redirectUri) {
+	return Astro.redirect("/oauth/insecure")
+}
+
+// Make sure the scope is valid
+// Scope can either be a string or an array of strings
+let requestedScopes: Scope[];
+let previousScopes: Scope[] = [];
+
+try {
+	const scopeArray = JSON.parse(scope);
+	const invalidScope = scopeArray.find((s: string) => !Object.values(Scope).includes(s as Scope));
+	if (invalidScope) {
+		return Astro.redirect("/oauth/insecure")
+	}
+	requestedScopes = scopeArray;
+} catch (e) {
+	if (!Object.values(Scope).includes(scope as Scope)) {
+		return Astro.redirect("/oauth/insecure")
+	}
+	requestedScopes = [scope] as Scope[];
+}
+
+// Check if a connection has already been established and only the scopes are being updated
+const connection = await prisma.oAuthConnection.findFirst({
+	where: {
+		user: {
+			uid: user.uid
+		},
+		organization: {
+			uid: organization.uid
+		}
+	}
+})
+
+
+let updateConnection = false;
+let alreadyConnected = false;
+
+if (connection) {
+	previousScopes = connection.scopes as Scope[];
+
+	// If the scopes are the same, no need to update the connection
+	if (previousScopes.reduce((acc, s) => acc && requestedScopes.includes(s), true)) {
+		alreadyConnected = true
+	}
+
+	updateConnection = true;
+}
+
+---
+
+<AuthLayout title="oAuth Connect | Neopathways">
+	<OAuthConnectModule organization={organization} scopes={requestedScopes} redirectUrl={redirectUri} update={updateConnection} {alreadyConnected} previousScopes={previousScopes} client:load></OAuthConnectModule>
+</AuthLayout>

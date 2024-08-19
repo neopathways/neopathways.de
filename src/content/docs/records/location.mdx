@@ -1,0 +1,75 @@
+---
+title: Location Record
+description: Introducing the location record, its structure and how to use it.
+category: Records
+date: 2024-08-17
+tags: [Records]
+languages: [TypeScript]
+author: Moritz Utcke
+---
+
+import MockResponse from '#components/Documentation/MockResponse.svelte';
+
+The location record captures the geographical location of a user or device.
+
+## Structure
+
+The location record has the following structure:
+
+```typescript
+type LocationRecord = {
+	latitude: number;
+	longitude: number;
+	accuracy?: number;
+	altitude?: number;
+	altitudeAccuracy?: number;
+	heading?: number;
+	speed?: number;
+}
+```
+
+
+## Providing a location record
+
+<MockResponse>
+
+```curl
+curl -X PUT https://neopathways.com/api/location \
+     -H "Authorization: Bearer {your_oauth_token}" \
+     -H "Content-Type: application/json" \
+     --data '{"latitude": 52.51231, "longitude": 12.41231}'
+```
+
+<div slot="response">
+
+```json
+{
+"uid": "cm00k19l000030clf2hc8dpve"
+}
+```
+
+</div>
+
+</MockResponse>
+
+## Retrieving a location record
+
+<MockResponse>
+
+```curl
+curl -X GET https://neopathways.com/api/location/cm00k19l000030clf2hc8dpve \
+		 -H "Authorization: Bearer {your_oauth_token}"
+```
+
+<div slot="response">
+
+```json
+{
+"latitude": 52.51231,
+"longitude": 12.41231
+}
+```
+
+</div>
+
+</MockResponse>

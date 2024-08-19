@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "Scope" AS ENUM ('READ', 'WRITE', 'DELETE', 'FULL', 'LOCATION_READ', 'LOCATION_WRITE', 'LOCATION_DELETE', 'LOCATION_FULL');
+
+-- AlterTable
+ALTER TABLE "oAuthConnection" ADD COLUMN     "scopes" TEXT[];
