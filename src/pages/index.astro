@@ -6,9 +6,9 @@ import Layout from '#layouts/Layout.astro';
 
 <Layout title="Neopathways">
 	<div class="flex flex-col gap-24">
-		<div class="max-w-screen-2xl w-full mx-auto mt-[75px] prose prose-2xl grid grid-cols-2">
+		<div class="max-w-screen-2xl w-full mx-auto mt-[75px] prose prose-2xl grid lg:grid-cols-2">
 			<div class="w-full h-full flex items-center justify-center relative">
-				<div class="max-w-xl">
+				<div class="max-w-xl py-24 px-4">
 					<h1 class="text-white text-6xl font-medium mb-8">Everything starts with identity</h1>
 					<p class="text-white text-2xl mb-32">Identity can create great user experiences, increase customer sign-ups, improve employee productivity, and get apps to market faster.</p>
 					<div class="flex flex-row gap-4 items-center">
@@ -23,18 +23,18 @@ import Layout from '#layouts/Layout.astro';
 			</div>
 		</div>
 		<div class="max-w-screen-xl w-full mx-auto">
-			<div class="flex flex-col gap-8">
+			<div class="flex flex-col gap-8 px-4">
 				<blockquote class="text-5xl">Get to know the people you're working with</blockquote>
 				<blockquote class="text-5xl text-gray-500">Our systems enable organizations to perform best with little overhead.</blockquote>
 			</div>
 		</div>
-		<div class="max-w-screen-2xl w-full mx-auto bg-primary bg-opacity-25 rounded-lg">
-			<div class="max-w-screen-xl mx-auto grid grid-cols-2 gap-8 py-24">
-				<div class="flex flex-col gap-4 mx-auto">
+		<div class="max-w-screen-2xl w-full mx-auto bg-primary bg-opacity-25 rounded-lg px-4">
+			<div class="max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 py-24">
+				<div class="flex flex-col gap-4 mx-auto w-full">
 					<p class="text-3xl leading-snug text-base-content text-opacity-70">Our platform is extensible, easy-to-use, neutral, and works with your existing solutions, so you're free to choose the best technology for now and the future.</p>
 					<p class="text-3xl leading-snug text-base-content">This is how we do it</p>
 				</div>
-				<div class="grid grid-cols-2 gap-12">
+				<div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-2 gap-12">
 						<div class="flex flex-col">
 							<div class="text-base-content text-4xl font-bold">20,400+</div>
 							<div class="text-lg text-base-content text-opacity-65">customers</div>
@@ -48,12 +48,12 @@ import Layout from '#layouts/Layout.astro';
 							<div class="text-lg text-base-content text-opacity-65">Willingness to Recommend in the 2023 Gartner® Peer Insights™ 'Customers' Choice in Access Management' report</div>
 						</div>
 				</div>
-				<div class="divider col-span-2"></div>
+				<div class="divider lg:col-span-2"></div>
 				<div class="card bg-base-100 hover:-translate-y-4 transition-[400ms,all,ease] group cursor-pointer">
 					<figure>
 						<BlurredImageWrapper class="object-cover h-96 w-full" alt="" src='https://png.pngtree.com/thumb_back/fw800/background/20221130/pngtree-korean-girl-studying-and-working-from-home-with-laptop-photo-image_42600132.jpg'></BlurredImageWrapper>
 					</figure>
-					<div class="card-body p-16">
+					<div class="card-body p-8 lg:p-16">
 						<h2 class="card-title text-4xl mb-4">Customer Identity Cloud</h2>
 						<p class="text-xl text-base-content text-opacity-70">Built to tackle both Consumer and SaaS Apps across every industry. Authenticate, authorize, and secure access for applications, devices, and users.</p>
 						<div class="card-actions">
@@ -75,9 +75,9 @@ import Layout from '#layouts/Layout.astro';
 				</div>
 			</div>
 		</div>
-		<div class="max-w-screen-xl w-full mx-auto prose prose-lg flex flex-col">
+		<div class="max-w-screen-xl w-full mx-auto prose prose-lg flex flex-col px-4">
 			<h2 class="text-5xl font-normal leading-tight">We're here for you, from always-on customer support to thousands of integrations designed for every use case</h2>
-			<div class="grid grid-cols-3 gap-8">
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				<a class="card bg-base-200 border border-base-300 hover:-translate-y-4 transition-all hover:bg-primary hover:bg-opacity-60 cursor-pointer no-underline" href="/identity-verification">
 					<div class="card-body">
 						<h3 class="card-title mt-1">Identity Verification</h3>
@@ -108,7 +108,7 @@ import Layout from '#layouts/Layout.astro';
 			</div>
 		</div>
 		<div class="divider max-w-screen-xl mx-auto w-full"></div>
-		<div class="max-w-screen-xl mx-auto grid grid-cols-2 gap-12 prose prose-2xl mb-24">
+		<div class="max-w-screen-xl mx-auto grid lg:grid-cols-2 gap-12 prose prose-2xl mb-24 px-4">
 			<h3 class="text-4xl my-0 font-normal">Ready to put Identity first?</h3>
 			<div class="flex flex-col">
 				<p class="mt-0">Get hands on with the free trial today, or get in touch with our team to discuss your unique needs.</p>

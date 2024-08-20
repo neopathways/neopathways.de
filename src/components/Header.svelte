@@ -39,13 +39,13 @@
 <svelte:window on:scroll={scroll} />
 <div class:move-up={invisible} class=" fixed top-0 z-50 transition-all w-full">
 	<div
-	class="navbar bg-base-100 px-8 border-b border-b-base-200 h-[75px] flex w-full"
+	class="navbar bg-base-100 px-4 lg:px-8 border-b border-b-base-200 h-[75px] flex w-full"
 >
 	<div class="mx-auto max-w-screen-xl w-full relative justify-between">
 		<a class="link" href="/">
 			<ReactiveSvg src="/logo-long.svg" class="h-14 w-48"></ReactiveSvg>
 		</a>
-		<div class="flex-none">
+		<div class="flex-none hidden lg:block">
 			<ul class="menu menu-horizontal menu-md items-center gap-2 px-1">
 				<div class="dropdown static">
 					<li tabindex="0" role="button" class="group">
@@ -250,7 +250,7 @@
 				<li><a href="/about">About</a></li>
 			</ul>
 		</div>
-		<div class="flex items-center gap-4">
+		<div class="items-center gap-4 hidden lg:flex">
 			{#if user}
 			<div class="dropdown">
 				<div tabindex="0" role="button" class="flex flex-row gap-4 btn btn-ghost text-right">

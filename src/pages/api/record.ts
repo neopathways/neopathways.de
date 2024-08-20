@@ -4,6 +4,7 @@ import { z, ZodIssueCode } from "zod";
 import { prisma } from "#lib/prisma";
 import { getUserFromBearerAuthorizationHeader } from "#lib/auth";
 import type { Prisma } from "@prisma/client";
+import { ZodDemographicValidator } from "#lib/AccuracyClassification/demographic";
 
 export const PUT = defineApiRoute({
 	input: UserRecordSchema.omit({
@@ -85,6 +86,7 @@ const RecordFilter = UserRecordSchema.pick({
 				parseJsonPreprocessor,
 				UserRecordSchema.shape.tags
 			),
+			filters: z.record(z.string(), z.any()).optional(),
 			orguid: z.string(),
 			take: z.number().max(50).default(10),
 			skip: z.number().default(0),
@@ -114,6 +116,45 @@ export const GET = defineApiRoute({
 			},
 			organization: {
 				uid: input.orguid
+			}
+		}
+
+		if (input.filters) {
+			const validator = ZodDemographicValidator;
+
+			const { data, success, error } = validator.safeParse(input.filters);
+
+			if (!success) {
+				throw new APIError({
+					code: "BAD_REQUEST",
+					message: "Invalid filters",
+					details: error.errors,
+				});
+			}
+
+			where.AND = [];
+			for (const key in data) {
+				const value = data[key];
+
+				if (typeof value === "number") {
+					(where.AND as Prisma.UserRecordWhereInput[]).push(
+						{
+							data: {
+								path: [key],
+								equals: value
+							}
+						}
+					)
+				} else if (typeof value === "string") {
+					(where.AND as Prisma.UserRecordWhereInput[]).push(
+						{
+							data: {
+								path: [key],
+								string_starts_with: value
+							}
+						}
+					)
+				}
 			}
 		}
 

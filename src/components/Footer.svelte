@@ -4,8 +4,8 @@
 </script>
 
 <footer class="footer bg-base-100 border-t border-t-base-200 items-center p-4">
-	<div class="max-w-screen-xl w-full mx-auto flex flex-row justify-between items-center">
-			<div class="flex flex-row items-center">
+	<div class="max-w-screen-xl w-full mx-auto flex flex-col lg:flex-row justify-between items-center">
+			<div class="flex flex-col lg:flex-row items-center">
 				<a class="link" href="/">
 					<ReactiveSvg src="/logo-long.svg" class="h-14 w-48"
 					></ReactiveSvg>
