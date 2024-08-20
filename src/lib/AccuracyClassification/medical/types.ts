@@ -1,4 +1,3 @@
-import { url } from "dist/client/_astro/client-integration.CQXCHKmh";
 import { z } from "zod";
 
 export type AnatomicalSystem = {};
