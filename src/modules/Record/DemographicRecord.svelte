@@ -14,12 +14,6 @@
 		data: z.infer<typeof ZodDemographicValidator>;
 	};
 
-	export let similar: (UserRecord & {
-		data: z.infer<typeof ZodDemographicValidator>;
-		user: User,
-		organization: Organization
-	})[];
-
 	const demographicDistribution: { male: number, female: number, label: string, mark?: "female" | "male" }[] = [
   { "male": 2.5, "female": 2.4, label: "0-4" },
   { "male": 2.7, "female": 2.5, label: "5-9" },

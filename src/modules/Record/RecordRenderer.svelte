@@ -11,6 +11,7 @@ import { UserRecordSchema } from "prisma/generated";
 	import FilterInput from "#components/FilterInput.svelte";
 	import type { EditorView, ViewUpdate } from "@codemirror/view";
 	import { ZodValidatorMap } from "#lib/AccuracyClassification/zod";
+	import MedicalRecord from "./MedicalRecord.svelte";
 	
 	export let record: UserRecord & { user: User, organization: Organization, data: any };
 	export let similar: (UserRecord & { user: User, organization: Organization, data: any })[];
@@ -23,6 +24,8 @@ import { UserRecordSchema } from "prisma/generated";
 		Element = LocationRecord;
 	} else if (record.category === "DEMOGRAPHIC") {
 		Element = DemographicRecord;
+	} else if (record.category === "MEDICAL") {
+		Element = MedicalRecord;
 	}
 
 const categories = Object.values(UserRecordSchema.shape.category.enum);

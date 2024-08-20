@@ -135,6 +135,7 @@ enum RecordTag {
   VERIFICATION
   VALIDATION
   OTHER
+	DENTAL
 }
 
 model UserRecord {

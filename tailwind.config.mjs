@@ -16,6 +16,7 @@ export default {
 			{
 				black: {
 					primary: "#6247aa",
+					"--primary": "#6247aa",
 					"primary-focus": "#a06cd5",
 					"--primary-focus": "#a06cd5",
 					"primary-content": "#ffffff",
@@ -31,13 +32,19 @@ export default {
 					"accent-content": "#000000",
 
 					neutral: "#333333",
+					"--neutral": "#333333",
 					"neutral-focus": "#4d4d4d",
+					"--neutral-focus": "#4d4d4d",
 					"neutral-content": "#ffffff",
 
 					"base-100": "#1c1d1f",
+					"--base-100": "#1c1d1f",
 					"base-200": "#242527",
+					"--base-200": "#242527",
 					"base-300": "#303133",
+					"--base-300": "#303133",
 					"base-content": "#ffffff",
+					"--base-content": "#ffffff",
 
 					info: "#0000ff",
 					success: "#45cd5c",

@@ -14,13 +14,6 @@
 		data: z.infer<typeof ZodLocationValidator>;
 	};
 
-	export let similar: (UserRecord & {
-		data: z.infer<typeof ZodLocationValidator>;
-		user: User,
-		organization: Organization
-	})[];
-
-
 </script>
 
 <div class="grid grid-cols-[1fr,1fr] gap-8">
