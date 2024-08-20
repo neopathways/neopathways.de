@@ -1,4 +1,4 @@
 bun astro build
-docker compose up
-bun prisma generate
+docker compose up -d
+bunx prisma generate
 bun ./dist/server/entry.mjs
