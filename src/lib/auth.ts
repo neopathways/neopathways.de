@@ -78,6 +78,51 @@ export async function getUserFromBearerAuthorizationHeader<UserInclude extends P
 	return user;
 }
 
+/**
+ * Retrieves the user from n optionally provided Bearer authorization header.
+ * If the header or provided token is invalid or the user doesn't exist, this function will return null
+ * @param authorization The optional Authorization header
+ * @returns The user if one is found, otherwise throws an error.
+ */
+export async function getUserFromOptionalBearerAuthorizationHeader<UserInclude extends Prisma.UserInclude>(authorization?: string, include: UserInclude = {} as UserInclude): Promise<User | null> {
+	if (!authorization) {
+		return null;
+	}
+
+	const { type, value } = parseHeader(authorization);
+
+	if (type !== "Bearer") {
+		return null;
+	}
+
+	const accessToken = decodeToken(value);
+	
+
+	if (!accessToken || !accessToken.sub || !accessToken.exp || accessToken.typ !== "access") {
+		return null;
+	}
+
+	if (accessToken.exp < Date.now()) {
+		return null;
+	}
+
+	const user = await prisma.user.findUnique<{
+		where: { uid: string },
+		include: UserInclude
+	}>({
+		where: {
+			uid: accessToken.sub as string
+		},
+		include
+	})
+
+	if (!user) {
+		return null;
+	}
+
+	return user;
+}
+
 export async function getUserFromAstroGlobal<UserInclude extends Prisma.UserInclude>(astro: AstroGlobal, include: UserInclude = {} as UserInclude, renewAccessToken = true) {
 	const accessTokenCookie = astro.cookies.get("accessToken")
 	const refreshTokenCookie = astro.cookies.get("refreshToken")

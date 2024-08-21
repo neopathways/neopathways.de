@@ -1,12 +1,27 @@
 import { getAccuracyPrediction } from "#lib/AccuracyClassification";
-import { ZodDentalTherapy } from "#lib/AccuracyClassification/medical/types";
 import { getUserAndOrganizationFromOAuthHeader } from "#lib/auth";
 import { prisma } from "#lib/prisma";
-import { defineApiRoute } from "astro-typesafe-api/server";
+import { APIError, defineApiRoute } from "astro-typesafe-api/server";
 import { z } from "zod";
+import { DentalTherapySchema, MaterialSchema, TransactionSchema, type DentalTherapy } from "prisma/generated";
+import { ZodRef } from "#lib/refs/types";
+
+const dbGeneratedFields: { uid: true, created: true, updated: true, sha512: true} = {
+	uid: true,
+	created: true,
+	updated: true,
+	sha512: true,
+}
+
+function isRef(obj: any): obj is z.infer<typeof ZodRef> {
+	return obj && "$ref" in obj && "$type" in obj;
+}
 
 export const PUT = defineApiRoute({
-	input: ZodDentalTherapy,
+	input: DentalTherapySchema.omit(dbGeneratedFields).merge(z.object({
+		materialsUsed: z.array(z.union([ZodRef, MaterialSchema.omit(dbGeneratedFields)])).optional(),
+		transactions: z.array(z.union([ZodRef, TransactionSchema.omit(dbGeneratedFields)])).optional()
+	})),
 	output: z.object({
 		uid: z.string(),
 		validationAccuracy: z.number()
@@ -16,6 +31,36 @@ export const PUT = defineApiRoute({
 	},
 	async fetch(input, { request }) {
 		const { user, organization } = await getUserAndOrganizationFromOAuthHeader(request.headers.get("Authorization"))
+
+		// Validate the input refs
+		if (input.materialsUsed) {
+			const refs = input.materialsUsed.filter(isRef);
+
+			const materials = await prisma.material.findMany({
+				where: {
+					uid: {
+						in: refs.map((material) => material.$ref)
+					}
+				}
+			})
+
+			if (materials.length !== input.materialsUsed.length) {
+				const unresolved = refs.filter((ref) => !materials.find((material) => material.uid === ref.$ref))
+				throw new APIError({
+					code: "BAD_REQUEST",
+					message: "Unkown material reference",
+					details: unresolved
+				})
+			}
+
+			const toCreate = input.materialsUsed.filter((material) => !isRef(material))
+
+			const createdMaterials = await prisma.material.createManyAndReturn({
+				data: toCreate
+			})
+
+			input.materialsUsed = [...materials, ...createdMaterials]
+		}
 
 		const record = await prisma.userRecord.create({
 			data: {

@@ -12,7 +12,7 @@
 
 <Header {light} {user}>
 	<div class="w-full left-0 h-[50px] bg-base-100 border-b border-b-base-200">
-		<div class="max-w-screen-xl mx-auto flex flex-row items-center h-full justify-between">
+		<div class="max-w-screen-xl mx-auto flex flex-row items-center h-full justify-between px-4 lg:px-8">
 			<div class="breadcrumbs text-sm">
 				<ul>
 					{#each [{name: "Home", href: "/docs"}, ...paths] as segment, i}
@@ -24,3 +24,4 @@
 		</div>
 	</div>
 </Header>
+<div class="h-[50px]"></div>

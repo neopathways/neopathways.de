@@ -1,0 +1,34 @@
+enum OrganizationRole {
+	ADMIN
+	MEMBER
+	MODERATOR
+	OWNER
+}
+
+model OrganizationMember {
+	uid String @id @default(cuid())
+	useruid String
+	user User @relation(fields: [useruid], references: [uid])
+	orguid String
+	organization Organization @relation(fields: [orguid], references: [uid])
+	created DateTime @default(now())
+	role OrganizationRole
+}
+
+model Organization {
+  uid             String         @id @default(cuid())
+  name            String @unique
+	ownerId String
+	owner User @relation(fields: [ownerId], references: [uid])
+  created         DateTime       @default(now())
+  updated         DateTime       @updatedAt
+	description String?
+	redirecturl String
+	
+	members OrganizationMember[]
+  ProvidedRecords UserRecord[]
+	Uploads				 Upload[]
+	oAuthConnections oAuthConnection[]
+	oAuthRefreshTokens oAuthRefreshToken[]
+	OverallCollectedAccuracies OverallCollectedAccuracy[]
+}

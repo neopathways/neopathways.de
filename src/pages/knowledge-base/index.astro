@@ -1,0 +1,62 @@
+---
+import DocsLayout from "#layouts/DocsLayout.astro";
+import { Archive, CaretDown, Mix, Rocket } from "radix-svelte-icons";
+
+
+---
+
+<DocsLayout title="Documentation | Neopathways" paths={[]}>
+	<div class="flex flex-col w-full h-auto py-32 my-16 px-4 lg:px-8 items-center justify-center text-center mt-[75px] mx-auto prose prose-xl lg:prose-2xl">
+		<h1 class="mb-0">Knowledge Base</h1>
+		<p>Quickly find everything you need to seamlessly integrate with Neopathways. Explore our resources, APIs, and best practices.</p>
+		<div class="flex flex-row gap-4">
+			<a href="/docs/client-integration" class="btn bg-gradient-to-tr to-primary from-primary-focus not-prose">Get Started</a>
+			<a href="" class="btn bg-gradient-to-br from-secondary-focus to-secondary not-prose">Quickstart</a>
+		</div>
+	</div>
+	<div class="flex w-full flex-col border-opacity-50 px-16">
+		<div class="divider"><CaretDown size={72} class="opacity-50"></CaretDown></div>
+	</div>
+	<div class="grid grid-cols-1 lg:grid-cols-2 overflow-x-auto gap-8 max-w-screen-xl w-full mx-auto my-32 px-4 lg:px-8">
+		<div class="prose prose-xl lg:prose-2xl col-span-1 lg:col-span-2">
+			<h2 class="my-4">Explore Developer Resources</h2>
+			<p class="mb-8">Learn how to implement authentication and authorization in any of your apps using Auth0 by Okta.</p>
+		</div>
+		<a class="bg-base-100 w-full border border-base-200 hover:bg-base-200 cursor-pointer rounded-lg relative" href="/knowledge-base/materials">
+			<div class="absolute top-0 left-0 rounded-t-lg w-full h-2 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%"></div>
+			<div class="flex flex-row gap-4 p-8 items-center">
+				<div class="flex items-center justify-center bg-base-300 bg-opacity-80 w-min h-min p-4 rounded-lg">
+					<Archive size={48} class="text-base-content"></Archive>
+				</div>
+				<div class="flex flex-col gap-2">
+					<h2 class="card-title">Materials Knowledge Base</h2>
+					<p>Learn how to integrate Neopathways with different frameworks and languages.</p>
+				</div>
+			</div>
+		</a>
+		<a class="bg-base-100 w-full border border-base-200 hover:bg-base-200 cursor-pointer rounded-lg relative" href="/docs/code-samples">
+			<div class="absolute top-0 left-0 rounded-t-lg w-full h-2 bg-gradient-to-r from-lime-500 to-green-600"></div>
+			<div class="flex flex-row gap-4 p-8 items-center">
+				<div class="flex items-center justify-center bg-base-300 bg-opacity-80 w-min h-min p-4 rounded-lg">
+					<Mix size={48} class="text-base-content"></Mix>
+				</div>
+				<div class="flex flex-col gap-2">
+					<h2 class="card-title">Explore code samples</h2>
+					<p>See Neopathways in action with different languages and frameworks.</p>
+				</div>
+			</div>
+		</a>
+		<a class="bg-base-100 w-full border border-base-200 hover:bg-base-200 cursor-pointer rounded-lg relative">
+			<div class="absolute top-0 left-0 rounded-t-lg w-full h-2 bg-gradient-to-r from-rose-300 to-orange-400"></div>
+			<div class="flex flex-row gap-4 p-8 items-center">
+				<div class="flex items-center justify-center bg-base-300 bg-opacity-80 w-min h-min p-4 rounded-lg">
+					<Rocket size={48} class="text-base-content"></Rocket>
+				</div>
+				<div class="flex flex-col gap-2">
+					<h2 class="card-title">Build your app</h2>
+					<p>Use Neopathways to secure access to your application and start collecting data.</p>
+				</div>
+			</div>
+		</a>
+	</div>
+</DocsLayout>

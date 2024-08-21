@@ -1,8 +1,10 @@
 ---
-import RecordRenderer from "#modules/Record/RecordRenderer.svelte";
 import ProfileLayout from "#layouts/ProfileLayout.astro";
 import { prisma } from "#lib/prisma";
 import { getUserFromAstroGlobal } from "#lib/auth";
+import RecordRenderer from "#modules/Record/RecordRenderer.svelte"
+import moment from "moment";
+import RecordSearch from "#components/RecordSearch.svelte";
 
 const user = await getUserFromAstroGlobal(Astro)
 
@@ -24,7 +26,10 @@ if (!record) {
 
 const similar = await prisma.userRecord.findMany({
 	where: {
-		category: record.category
+		category: record.category,
+		NOT: {
+			uid: record.uid
+		}
 	},
 	take: 5,
 	include: {
@@ -37,8 +42,20 @@ const similar = await prisma.userRecord.findMany({
 })
 
 
+
 ---
 
 <ProfileLayout title={`Record ${uid}`}>
-	<RecordRenderer {record} {similar} client:load></RecordRenderer>
+	<div class="grid grid-cols-2">
+		<div class="flex flex-col">
+			<h1 class="mb-0">Record <span class="text-base-content text-opacity-50">{record.uid}</span></h1>
+			<span class="text-base-content text-opacity-50 block mb-8">{moment(record.created).format("MMMM DD, YYYY HH:mm")} by <a href={`/organization/${record.organization.uid}`} target="_blank">{record.organization.name}</a></span>
+		</div>
+		<div class="flex flex-row gap-4">
+			<RecordSearch record={record} client:load></RecordSearch>
+		</div>
+	</div>
+	<div class="prose prose-xl max-w-full">
+		<RecordRenderer record={record} similar={similar} client:load />
+	</div>
 </ProfileLayout>

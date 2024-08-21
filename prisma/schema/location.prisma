@@ -1,0 +1,29 @@
+// A model for storing location data
+// Can also be used to geo-locate IP addresses
+model Location {
+  uid String @id @default(cuid())
+
+  ip               String? @unique
+  latitude         Float
+  longitude        Float
+  altitude         Float?
+  accuracy         Float?
+  altitudeAccuracy Float?
+  heading          Float?
+  speed            Float?
+  continent_code   String?
+  continent_name   String?
+  country_code     String?
+  country_name     String?
+  subdivision_code String?
+  subdivision_name String?
+  city_name        String?
+  postal_code      String?
+  timezone         String?
+  address          String?
+  notes            String?
+	sha512			String
+
+  @@index([latitude, longitude])
+  Merchant Merchant[]
+}

@@ -1,0 +1,37 @@
+---
+import Layout from "#layouts/Layout.astro";
+import Material from "#components/Records/Material.svelte";
+import { prisma } from "#lib/prisma";
+import { MagnifyingGlass } from "radix-svelte-icons";
+import MaterialSearch from "#components/MaterialSearch.svelte";
+
+const materials = await prisma.material.findMany({
+	orderBy: {
+		created: 'desc'
+	},
+	include: {
+		user: true
+	}
+});
+---
+
+<Layout title="Materials">
+	<main class="max-w-screen-xl py-8 px-4 lg:px-8 flex flex-col gap-4 mx-auto">
+		<div class="breadcrumbs text-sm">
+			<ul>
+				<li><a href="/materials">Materials</a></li>
+			</ul>
+		</div>
+		<div class="prose prose-lg max-w-full">
+			<h1 class="mb-0">Materials Knowledge Base</h1>
+			<p class="mt-2 mb-4">Unlock comprehensive insights into materials science and engineering. Explore detailed data, expert analyses, and cutting-edge research to inform your projects and innovations. Whether you're developing new materials or refining existing ones, our knowledge base offers the tools and resources you need to succeed.</p>
+		</div>
+		<div class="flex flex-row gap-4">
+			<MaterialSearch client:load></MaterialSearch>
+			<button class="btn btn-square btn-ghost"><MagnifyingGlass size={18}></MagnifyingGlass></button>
+		</div>
+		<div class="grid grid-cols-3 gap-4">
+			{materials.map(material => <Material {material} hrefType="id" target="_self"></Material>)}
+		</div>
+	</main>
+</Layout>

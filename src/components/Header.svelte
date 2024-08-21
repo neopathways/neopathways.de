@@ -37,6 +37,7 @@
 </script>
 
 <svelte:window on:scroll={scroll} />
+<div class="h-[75px]"></div>
 <div class:move-up={invisible} class=" fixed top-0 z-50 transition-all w-full">
 	<div
 	class="navbar bg-base-100 px-4 lg:px-8 border-b border-b-base-200 h-[75px] flex w-full"
@@ -147,8 +148,8 @@
 									class="font-medium text-base link"
 									href="/docs">Developer References</a
 								>
-								<a class="font-medium text-base"
-									>Knowledge Base</a
+								<a class="font-medium text-base link"
+									href="/knowledge-base">Knowledge Base</a
 								>
 								<a class="font-medium text-base"
 									>Verification System Integration</a

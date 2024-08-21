@@ -1,0 +1,21 @@
+model User {
+  uid       String   @id @default(cuid())
+  email     String   @unique
+  firstname String
+  lastname  String
+  password  String
+  created   DateTime @default(now())
+  updated   DateTime @updatedAt
+
+  RefreshTokens              RefreshToken[]
+  oAuthRefreshTokens         oAuthRefreshToken[]
+  Organizations              Organization[]
+  OrganizationMemberOf       OrganizationMember[]
+  Records                    UserRecord[]
+  Uploads                    Upload[]
+  oAuthConnections           oAuthConnection[]
+  OverallCollectedAccuracies OverallCollectedAccuracy[]
+  Materials                  Material[]
+
+  Transaction Transaction[]
+}

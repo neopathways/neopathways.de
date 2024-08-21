@@ -1,0 +1,66 @@
+---
+import Layout from "#layouts/Layout.astro";
+import { createMarkdownProcessor } from "@astrojs/markdown-remark"
+import { prisma } from "#lib/prisma";
+import moment from "moment";
+import StoredJumpToTop from "#components/StoredJumpToTop.svelte";
+import HeadingMap from "#components/Documentation/HeadingMap.svelte";
+import { HamburgerMenu } from "radix-svelte-icons";
+import Material from "#components/Records/Material.svelte";
+
+const { uid } = Astro.params;
+
+const material = await prisma.material.findUnique({
+	where: {
+		uid
+	},
+	include: {
+		user: true
+	}
+});
+
+if (!material) {
+	return Astro.redirect("/404");
+}
+
+const processor = await createMarkdownProcessor();
+
+const {code, metadata} = await processor.render(material.longdescription || "");
+
+---
+
+<Layout title="Materials">
+	<main class="max-w-screen-xl py-8 px-4 lg:px-8 gap-12 mx-auto grid lg:grid-cols-[300px,1fr]">
+		<div class="drawer lg:drawer-open">
+			<input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+			<div class="drawer-content flex flex-col items-center justify-center">
+				<!-- Page content here -->
+				<label for="my-drawer-2" class="rounded-full fixed bottom-4 right-4 p-3 bg-base-100 border border-base-300 active:bg-base-300 transition drawer-button lg:hidden cursor-pointer"><HamburgerMenu size={24}></HamburgerMenu></label>
+			</div>
+			<div class="drawer-side z-[100] top-0 lg:top-24">
+				<label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+				<div class="flex flex-col bg-base-100 h-full py-6 lg:py-0 px-8 lg:px-0">
+					<HeadingMap headings={metadata.headings} client:load></HeadingMap>
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col gap-4">
+			<div class="breadcrumbs text-sm">
+				<ul>
+					<li><a href="/materials">Materials</a></li>
+					<li>{material.name}</li>
+				</ul>
+			</div>
+			<div class="flex flex-col">
+				<h1 class="my-0 text-4xl font-bold">{material.name}</h1>
+				<span class="text-base-content text-opacity-50 text-sm">Created {moment(material.created).format("MMMM DD, YYYY")}</span>
+			</div>
+			<Material {material} class="bg-gradient-to-tr from-primary to-primary-focus"></Material>
+			<article class="prose prose-lg max-w-full">
+				<div set:html={code}></div>
+				<StoredJumpToTop client:load class="md:hidden z-0" />
+			</article>
+		</div>
+	</main>
+</Layout>
+

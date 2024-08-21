@@ -1,0 +1,15 @@
+model DentalTherapy {
+  uid String @id @default(cuid()) /// @zod.custom.omit([input])
+
+  /// @zod.custom.use(z.number().min(11).max(48))
+  teeth         Int[]
+  type          String
+  materialsUsed Material[]
+  transactions  Transaction[]
+  description   String?
+  notes         String?
+  sha512        String /// @zod.custom.omit([input])
+
+  created DateTime @default(now()) /// @zod.custom.omit([input])
+  updated DateTime @updatedAt /// @zod.custom.omit([input])
+}

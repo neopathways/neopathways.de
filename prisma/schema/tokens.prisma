@@ -1,0 +1,10 @@
+model RefreshToken {
+  uid        String       @id @default(cuid())
+  token      String       @unique
+  useruid    String
+  user       User         @relation(fields: [useruid], references: [uid])
+  created    DateTime     @default(now())
+  validUntil DateTime
+	ip String?
+	agent String?
+}

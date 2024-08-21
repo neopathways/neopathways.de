@@ -1,0 +1,154 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider                         = "bunx zod-prisma-types"
+  output                           = "../generated"
+  addSelectType                    = false
+  addIncludeType                   = false
+  addInputTypeValidation           = false
+  createInputTypes                 = true
+  createPartialTypes               = false
+  createRelationValuesTypes        = true
+  createOptionalDefaultValuesTypes = false
+}
+
+enum RecordCategory {
+  IDENTIFICATION
+  BIOGRAPHICAL
+  DEMOGRAPHIC
+  MEDICAL
+  FINANCIAL
+  ONLINE_ACTIVITY
+  BEHAVIORAL
+  PREFERENCES
+  LOCATION
+  BIOMETRIC
+  LEGAL
+  PSYCHOLOGICAL
+  INTERESTS
+  COMMUNICATION
+  INTERACTION
+  OTHER
+}
+
+enum RecordTag {
+  SCAN
+  IMAGE
+  FACE
+  FINGERPRINT
+  VOICEPRINT
+  IRIS
+  TEXT
+  VOICE
+  VIDEO
+  LOCATION
+  CONTACT
+  EMAIL
+  MESSAGE
+  CHAT
+  VOICECALL
+  VIDEOCALL
+  VIDEOCONFERENCE
+  DOCUMENT
+  FORM
+  QUESTIONNAIRE
+  APPLICATION
+  TRANSACTION
+  CONTRACT
+  AGREEMENT
+  PERMISSION
+  CONSENT
+  APPROVAL
+  CONFIRMATION
+  VERIFICATION
+  VALIDATION
+  OTHER
+  DENTAL
+}
+
+model UserRecord {
+  uid      String         @id @default(cuid())
+  created  DateTime       @default(now())
+  updated  DateTime       @updatedAt
+  outdated Boolean        @default(false)
+  category RecordCategory
+  tags     RecordTag[]
+  data     Json
+  // Calculated trust score based on previous matches on this organization
+  accuracy Float
+
+  useruid String
+  user    User   @relation(fields: [useruid], references: [uid])
+
+  orguid       String
+  organization Organization @relation(fields: [orguid], references: [uid])
+}
+
+// Stores the overall accuracy of records collected for a specific user at a certain point in time
+// That way we can track the overall accuracy trend over time
+model OverallCollectedAccuracy {
+  uid          String       @id @default(cuid())
+  useruid      String
+  user         User         @relation(fields: [useruid], references: [uid])
+  orguid       String
+  organization Organization @relation(fields: [orguid], references: [uid])
+  accuracy     Float
+  created      DateTime     @default(now())
+}
+
+model Upload {
+  uid          String       @id @default(cuid())
+  filename     String
+  description  String
+  mimetype     String
+  encoding     String
+  useruid      String
+  user         User         @relation(fields: [useruid], references: [uid])
+  orguid       String
+  organization Organization @relation(fields: [orguid], references: [uid])
+  created      DateTime     @default(now())
+}
+
+model oAuthRefreshToken {
+  uid          String       @id @default(cuid())
+  token        String       @unique
+  useruid      String
+  user         User         @relation(fields: [useruid], references: [uid])
+  orguid       String
+  organization Organization @relation(fields: [orguid], references: [uid])
+  created      DateTime     @default(now())
+  validUntil   DateTime
+}
+
+enum Scope {
+  READ
+  WRITE
+  DELETE
+  FULL
+  LOCATION_READ
+  LOCATION_WRITE
+  LOCATION_DELETE
+  LOCATION_FULL
+}
+
+model oAuthConnection {
+  uid          String       @id @default(cuid())
+  useruid      String
+  user         User         @relation(fields: [useruid], references: [uid])
+  orguid       String
+  organization Organization @relation(fields: [orguid], references: [uid])
+  created      DateTime     @default(now())
+  updated      DateTime     @updatedAt
+  // TODO: Change to Scope[]
+  scopes       String[]
+
+  @@unique([useruid, orguid])
+}

@@ -9,7 +9,7 @@
 			"#lib/*": ["./src/lib/*"],
 			"#types/*": ["./src/types/*"],
 			"#modules/*": ["./src/modules/*"],
-			"prisma/generated": ["./prisma/generated"],
+			"prisma/generated": ["./prisma/generated/index"],
 		},
 		"types": ["astro", "bun-types"]
 	}

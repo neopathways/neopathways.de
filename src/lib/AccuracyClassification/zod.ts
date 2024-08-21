@@ -2,7 +2,7 @@ import type { $Enums, UserRecord } from "@prisma/client";
 import { z, type ZodSchema } from "zod";
 import { ZodDemographicValidator } from "./demographic";
 import { ZodLocationValidator } from "./location";
-import { ZodMedicalCondition } from "#lib/AccuracyClassification/medical/types";
+import { ZodMedicalCondition } from "#lib/types/medical";
 
 export const ZodValidatorMap: Record<$Enums.RecordCategory, ZodSchema> = {
 	BEHAVIORAL: z.object({}),

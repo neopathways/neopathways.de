@@ -1,0 +1,32 @@
+model Material {
+  /// The unique identifier for the material
+  uid          String  @id @default(cuid())
+  /// The name of the material
+  name         String
+  /// The description of the material
+  description  String?
+	/// The long description of the material as markdown
+	longdescription String? @db.Text
+  /// The type of the material
+  type         String?
+  /// A reference URL to the material
+  url          String?
+  /// The weight of the material
+  weight       Float?
+  /// The price of the material
+  price        Float?
+	/// The currency of the price
+	currency     String?
+  /// The unique hash of the material to enable dedup
+  sha512       String
+  /// The material's manufacturer
+  manufacturer String?
+
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  useruid String?
+  user    User?    @relation(fields: [useruid], references: [uid])
+	
+
+  DentalTherapy DentalTherapy[]
+}

@@ -108,6 +108,9 @@
 						focusout: (event) => {
 							dispatch("focusout", event);
 						},
+						blur: (event) => {
+							dispatch("blur", event);
+						},
 					},
 				}),
 			],

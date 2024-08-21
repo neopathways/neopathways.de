@@ -6,19 +6,19 @@ import { Archive, CaretDown, Mix, Rocket } from "radix-svelte-icons";
 ---
 
 <DocsLayout title="Documentation | Neopathways" paths={[]}>
-	<div class="flex flex-col w-full h-auto pt-48 pb-32 my-16 items-center justify-center text-center mt-[75px] mx-auto prose prose-2xl">
+	<div class="flex flex-col w-full h-auto py-32 my-16 px-4 lg:px-8 items-center justify-center text-center mt-[75px] mx-auto prose prose-xl lg:prose-2xl">
 		<h1 class="mb-0">Documentation</h1>
 		<p>Quickly find everything you need to seamlessly integrate with Neopathways. Explore our resources, APIs, and best practices.</p>
 		<div class="flex flex-row gap-4">
-			<a href="" class="btn bg-gradient-to-tr to-primary from-primary-focus not-prose">Get Started</a>
+			<a href="/docs/client-integration" class="btn bg-gradient-to-tr to-primary from-primary-focus not-prose">Get Started</a>
 			<a href="" class="btn bg-gradient-to-br from-secondary-focus to-secondary not-prose">Quickstart</a>
 		</div>
 	</div>
 	<div class="flex w-full flex-col border-opacity-50 px-16">
 		<div class="divider"><CaretDown size={72} class="opacity-50"></CaretDown></div>
 	</div>
-	<div class="grid grid-cols-2 overflow-x-auto gap-8 max-w-screen-xl w-full mx-auto my-32">
-		<div class="prose prose-2xl col-span-2">
+	<div class="grid grid-cols-1 lg:grid-cols-2 overflow-x-auto gap-8 max-w-screen-xl w-full mx-auto my-32 px-4 lg:px-8">
+		<div class="prose prose-xl lg:prose-2xl col-span-1 lg:col-span-2">
 			<h2 class="my-4">Explore Developer Resources</h2>
 			<p class="mb-8">Learn how to implement authentication and authorization in any of your apps using Auth0 by Okta.</p>
 		</div>

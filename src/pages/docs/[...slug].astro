@@ -5,6 +5,7 @@ import DocsLayout from "#layouts/DocsLayout.astro";
 import { getCollection } from "astro:content";
 import { getEntryBySlug } from "astro:content";
 import moment from "moment";
+import { HamburgerMenu } from "radix-svelte-icons";
 
 const { slug } = Astro.params;
 
@@ -35,9 +36,19 @@ const pathname = Astro.url.pathname
 ---
 
 <DocsLayout title={`${data.title} | Docs Neopathways`} paths={paths}>
-	<main class="mt-[125px] py-16 max-w-screen-2xl mx-auto min-h-[calc(100vh-215px)] grid grid-cols-[300px,1fr,300px] gap-8">
-		<div class="sticky top-[150px] flex flex-col h-min">
-			<HeadingMap {headings} client:load></HeadingMap>
+	<main class="py-16 max-w-screen-2xl mx-auto min-h-[calc(100vh-215px)] grid grid-cols-1 lg:grid-cols-[300px,1fr,300px] gap-16 px-4">
+		<div class="drawer lg:drawer-open">
+			<input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+			<div class="drawer-content flex flex-col items-center justify-center">
+				<!-- Page content here -->
+				<label for="my-drawer-2" class="rounded-full fixed bottom-4 right-4 p-3 bg-base-100 border border-base-300 active:bg-base-300 transition drawer-button lg:hidden cursor-pointer"><HamburgerMenu size={24}></HamburgerMenu></label>
+			</div>
+			<div class="drawer-side z-[100] top-0 lg:top-36">
+				<label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+				<div class="flex flex-col bg-base-100 h-full py-6 lg:py-0 px-8 lg:px-0">
+					<HeadingMap {headings} client:load></HeadingMap>
+				</div>
+			</div>
 		</div>
 		<article class="prose prose-xl">
 			<h1 class="mb-2">{data.title}</h1>

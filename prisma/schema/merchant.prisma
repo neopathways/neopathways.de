@@ -1,0 +1,16 @@
+model Merchant {
+  uid String @id @default(cuid())
+
+  name        String
+  locationRef String?
+  location    Location? @relation(fields: [locationRef], references: [uid], onDelete: SetNull, onUpdate: Cascade)
+  contact     String?
+  website     String?
+  notes       String?
+	sha512			String
+
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  Transactions Transaction[]
+}
